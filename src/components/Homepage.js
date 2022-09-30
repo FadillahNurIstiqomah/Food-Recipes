@@ -10,12 +10,6 @@ export default function Homepage (){
   const [meals, setMeals] = useState([])
   const { Content} = Layout;
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-
-  let meal = JSON.parse(JSON.stringify(meals))
-    if (search) {
-    meal = meals.filter(meal => meal.strMeal.toLowerCase().includes(search.toLowerCase()))
-    }
 
   const loadData = async () => {
   try {
@@ -28,7 +22,8 @@ export default function Homepage (){
 
   const searchBar = async (e) => {
     try {
-      const datas = await axios.get('https://www.themealdb.com/api/json/v1/1/search.php?f=' + e.target.value);
+      console.log(e.target.value)
+      const datas = await axios.get('https://www.themealdb.com/api/json/v1/1/search.php?s=' + e.target.value);
       setMeals(datas.data.meals);
     } catch (error) {
       console.log(loadData);
@@ -42,10 +37,6 @@ export default function Homepage (){
     } catch (error) {
       console.log(error);
     }
-  }
-  const onChange = (event) => {
-    let input = event.target.value
-    setSearch(input)
   }
 
   useEffect(() => {
@@ -70,14 +61,14 @@ export default function Homepage (){
               type="search" 
               placeholder="Search Foods" 
               aria-label="Search"
-              onChange={onChange && searchBar} 
+              onChange={searchBar} 
             />
           </form>
         </div>
       </div>
       <div className="site-layout-content">
-        {meal !== undefined &&
-          meal.map((item) => (
+        {meals !== undefined &&
+          meals.map((item) => (
           <Card
             hoverable
             style={{width: 320}}
